@@ -24,8 +24,8 @@ public class RestOrchestrator<T> {
 		
 	}
 	
-	public Optional<T> getHandler(String path) {
-		Optional<T> ret = Optional.empty();
+	public Optional<PathHandlerHolder<T>> getHandler(String path) {
+		Optional<PathHandlerHolder<T>> ret = Optional.empty();
 		
 		if (isAcceptablePath(path)) 
 			ret = findHandler(trimPath(path));
@@ -33,10 +33,10 @@ public class RestOrchestrator<T> {
 		return ret;
 	}
 	
-	private Optional<T> findHandler(String path) {
+	private Optional<PathHandlerHolder<T>> findHandler(String path) {
 		for (PathHandler<T> handler : HANDLERS)
 			if (handler.PATH.matches(path))
-				return Optional.of(handler.HANDLER);
+				return Optional.of(new PathHandlerHolder<T>(handler.PATH.produceValues(path), handler.HANDLER));
 		
 		return Optional.empty();
 	}
