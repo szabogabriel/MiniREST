@@ -69,6 +69,18 @@ public class CompiledPathTest {
 	}
 	
 	@Test
+	public void matchEmptyValue() {
+		CompiledPath cp = new CompiledPath("/test/{first}/div/{second}");
+		
+		Map<String, String> data = cp.produceValues("/test//div/data");
+		
+		assertNotNull(data);
+		assertEquals(data.size(), 2);
+		assertEquals(data.get("first"), "");
+		assertEquals(data.get("second"), "data");
+	}
+	
+	@Test
 	public void checkNotMatch() {
 		CompiledPath cp = new CompiledPath("/test/{first}");
 		
