@@ -1,0 +1,21 @@
+<project name="MiniREST" basedir="." default="all">
+	
+	<property name="dir.src" value="${basedir}/src"/>
+	<property name="dir.bin" value="${basedir}/bin"/>
+	<property name="file.jar" value="${basedir}/miniREST_1.0.jar"/>
+	
+	<target name="all" depends="clean,build,package"/>
+	
+	<target name="clean" unless="skip.clean">
+		<delete file="${file.jar}"/>
+	</target>
+	
+	<target name="build" unless="skip.build">
+		<javac srcdir="${dir.src}" destdir="${dir.bin}"/>
+	</target>
+		
+	<target name="package" unless="skip.package">
+		<jar destfile="${file.jar}" basedir="${dir.bin}"/>
+	</target>
+	
+</project>
