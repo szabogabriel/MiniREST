@@ -45,7 +45,7 @@ public class CompiledPath {
 						name += data[i];
 					
 					GROUPNAMES[groupid++] = name;
-					ret += "([a-zA-Z0-9]*)";
+					ret += "([a-zA-Z0-9_\\\\.\\\\-]*)";
 				} else
 					ret += data[i];
 			}

@@ -12,6 +12,8 @@ import org.junit.Test;
 
 public class CompiledPathTest {
 	
+	private final String DEFAULT_REGEX = "([a-zA-Z0-9_\\\\.\\\\-]*)";
+	
 	@Test
 	public void createSimplePath() {
 		CompiledPath cp = new CompiledPath("/test");
@@ -24,16 +26,40 @@ public class CompiledPathTest {
 	public void createNamedPathAtTheEnd() {
 		CompiledPath cp = new CompiledPath("/test/{first}");
 		
-		assertEquals(cp.getRegex(), "/test/([a-zA-Z0-9]*)");
+		assertEquals(cp.getRegex(), "/test/" + DEFAULT_REGEX);
 		assertEquals(cp.getGroupnames().length, 1);
 		assertEquals(cp.getGroupnames()[0], "first");
+	}
+	
+	private void createNamedPathWithSpecialCharacter(String character) {
+		CompiledPath cp = new CompiledPath("/test/{first}");
+		
+		Map<String, String> data = cp.produceValues("/test/asdf" + character + "ASDF" + character + "0123");
+		
+		assertEquals(data.size(), 1);
+		assertEquals(data.get("first"), "asdf" + character + "ASDF" + character + "0123");
+	}
+	
+	@Test
+	public void createNamedPathWithDash() {
+		createNamedPathWithSpecialCharacter("-");
+	}
+	
+	@Test
+	public void createNamedPathWithUnderscore() {
+		createNamedPathWithSpecialCharacter("_");
+	}
+	
+	@Test
+	public void createNamedPathWithDot() {
+		createNamedPathWithSpecialCharacter(".");
 	}
 	
 	@Test
 	public void createNamedPathInTheMiddle() {
 		CompiledPath cp = new CompiledPath("/test/{first}/test");
 		
-		assertEquals(cp.getRegex(), "/test/([a-zA-Z0-9]*)/test");
+		assertEquals(cp.getRegex(), "/test/" + DEFAULT_REGEX + "/test");
 		assertEquals(cp.getGroupnames().length, 1);
 		assertEquals(cp.getGroupnames()[0], "first");
 	}
@@ -42,7 +68,7 @@ public class CompiledPathTest {
 	public void createSeveralNamedPath() {
 		CompiledPath cp = new CompiledPath("/test/{first}/div/{second}/div/{third}/div");
 		
-		assertEquals(cp.getRegex(), "/test/([a-zA-Z0-9]*)/div/([a-zA-Z0-9]*)/div/([a-zA-Z0-9]*)/div");
+		assertEquals(cp.getRegex(), "/test/" + DEFAULT_REGEX + "/div/" + DEFAULT_REGEX + "/div/" + DEFAULT_REGEX + "/div");
 		assertEquals(cp.getGroupnames().length, 3);
 		assertEquals(cp.getGroupnames()[0], "first");
 		assertEquals(cp.getGroupnames()[1], "second");
