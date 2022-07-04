@@ -1,26 +1,26 @@
 package minirest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class RestOrchestratorTest {
 	
 	private RequestHandlerOrchestrator<String> restOrchestrator;
 	
-	@Before
-	public void prepare() {
+	@BeforeEach
+	void prepare() {
 		restOrchestrator = new RequestHandlerOrchestrator<>();
 	}
 	
 	@Test
-	public void testFoundHandler() {
+	void testFoundHandler() {
 		restOrchestrator.setHandler("/test", "rest");
 		
 		Optional<HandlerData<String>> handler = restOrchestrator.getHandler("/test");
@@ -30,7 +30,7 @@ public class RestOrchestratorTest {
 	}
 	
 	@Test
-	public void testNotFoundHandler() {
+	void testNotFoundHandler() {
 		restOrchestrator.setHandler("/test", "test");
 		
 		Optional<HandlerData<String>> handler = restOrchestrator.getHandler("/nope");
@@ -39,7 +39,7 @@ public class RestOrchestratorTest {
 	}
 	
 	@Test
-	public void testNotAcceptablePath() {
+	void testNotAcceptablePath() {
 		restOrchestrator = new RequestHandlerOrchestrator<>("/prefix");
 		
 		restOrchestrator.setHandler("/test", "test");
@@ -49,7 +49,7 @@ public class RestOrchestratorTest {
 	}
 	
 	@Test
-	public void testParamsParsed() {
+	void testParamsParsed() {
 		restOrchestrator.setHandler("/test/{first}/{second}", "testHandler");
 		
 		Optional<HandlerData<String>> handler = restOrchestrator.getHandler("/test/paramA/paramB");
